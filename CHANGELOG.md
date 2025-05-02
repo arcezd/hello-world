@@ -1,3 +1,9 @@
+## v0.1.3 (2025-05-01)
+
+### Fix
+
+- **CI**: typo on script for get app version
+
 ## v0.1.2 (2025-05-01)
 
 ### Fix
