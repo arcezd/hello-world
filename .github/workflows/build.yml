@@ -39,14 +39,14 @@ jobs:
         id: version
         run: |
           APP_VERSION=$(gradle printVersion -q)
-          echo "app-version=$APP_VERSION" >> $GITHUB_OUTPUT
+          echo "app-version=${APP_VERSION}" >> $GITHUB_OUTPUT
           # check that version matches the tag
           if [[ "${{ github.event.inputs.dry-run }}" == 'true' ]]; then
             echo "This is a dry run, skipping version check"
-            echo "App version: $APP_VERSION"
+            echo "App version: ${APP_VERSION}"
             exit 0
-          elif [[ "${GITHUB_REF}" != "refs/tags/v$APP_VERSION" ]]; then
-            echo "Version ${GITHUB_REF} does not match tag v${{ steps.version.outputs.app-version }}"
+          elif [[ "${GITHUB_REF}" != "refs/tags/v${APP_VERSION}" ]]; then
+            echo "Version ${APP_VERSION} does not match version from tag '${GITHUB_REF}'""
             exit 1
           fi
       - name: Build
