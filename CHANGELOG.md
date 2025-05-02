@@ -1,3 +1,9 @@
+## v0.1.4 (2025-05-01)
+
+### Fix
+
+- **CI**: docker build tag reference
+
 ## v0.1.3 (2025-05-01)
 
 ### Fix
