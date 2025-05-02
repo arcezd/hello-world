@@ -46,7 +46,7 @@ jobs:
             echo "App version: ${APP_VERSION}"
             exit 0
           elif [[ "${GITHUB_REF}" != "refs/tags/v${APP_VERSION}" ]]; then
-            echo "Version ${APP_VERSION} does not match version from tag '${GITHUB_REF}'""
+            echo "Version ${APP_VERSION} does not match version from tag '${GITHUB_REF}'"
             exit 1
           fi
       - name: Build
