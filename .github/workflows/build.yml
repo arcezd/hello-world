@@ -102,7 +102,7 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository }}
-            ${{ vars.HARBOR_REGISTRY }}/${{ github.repository }}
+            ${{ vars.HARBOR_REGISTRY != '' && format('{0}/{1}', vars.HARBOR_REGISTRY, github.repository) || '' }}
           tags: |
             type=semver,pattern={{version}}
       - name: Build and push
