@@ -1,3 +1,9 @@
+## v0.2.1 (2025-05-01)
+
+### Fix
+
+- **CI**: add v prefix to docker tags
+
 ## v0.2.0 (2025-05-01)
 
 ### Feat
