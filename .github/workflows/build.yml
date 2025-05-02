@@ -45,7 +45,7 @@ jobs:
             echo "This is a dry run, skipping version check"
             echo "App version: $APP_VERSION"
             exit 0
-          elif [[ "${GITHUB_REF}" != "refs/tags/v${{ steps.version.outputs.app-version }}" ]]; then
+          elif [[ "${GITHUB_REF}" != "refs/tags/v$APP_VERSION" ]]; then
             echo "Version ${GITHUB_REF} does not match tag v${{ steps.version.outputs.app-version }}"
             exit 1
           fi
