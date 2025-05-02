@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0">
+    <title>Hello World! - arcezd</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+    <!-- Bootstrap v5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Main Content -->
+    <div class="container d-flex flex-grow-1 justify-content-center align-items-center text-center">
+        <div class="position-relative mb-4">
+            <img src="images/amelia-drawing.png" alt="amelia's drawing" class="img-fluid mb-4 small-image">
+            <span class="image-attribution position-absolute text-muted">Artwork by Amelia Arce</span>
+        </div>
+        <div class="text-start mb-3">
+            <h1 th:text="|Hello, ${name}!|"></h1>
+            <p th:text="|Application version: ${appVersion}|"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-3 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">
+                <a href="https://github.com/arcezd" target="_blank" class="text-decoration-none" style="color: inherit;">arcezd</a> | 
+                <img src="https://flagcdn.com/w40/cr.png" alt="Costa Rica Flag" class="img-fluid" style="height: 15px; vertical-align: middle;">
+                Pura vida!
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

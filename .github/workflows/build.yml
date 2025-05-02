@@ -1,0 +1,123 @@
+---
+name: Build image
+run-name: Build image for ${{ github.ref_name }}
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: 'Run the workflow without pushing the image'
+        required: false
+        default: true
+        type: boolean
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-beta.*'
+jobs:
+  java-build:
+    name: Build java project
+    runs-on: ubuntu-latest
+    output:
+      java-version: ${{ steps.setup-java.outputs.java-version }}
+      app-version: ${{ steps.version.outputs.app-version }}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+      - name: Get facts
+        id: facts
+        run: |
+          echo "java-version=$(cat .java-version)" >> $GITHUB_OUTPUT
+      - name: Setup java
+        id: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: ${steps.facts.outputs.java-version}
+          cache: 'gradle'
+      - name: Get app version
+        id: version
+        run: |
+          echo "app-version=$(./gradlew printVersion -q)" >> $GITHUB_OUTPUT
+          # check that version matches the tag
+          if [[ "${GITHUB_REF}" != "refs/tags/v${{ steps.version.outputs.app-version }}" ]]; then
+            echo "Version ${GITHUB_REF} does not match tag v${{ steps.version.outputs.app-version }}"
+            exit 1
+          fi
+      - name: Build
+        id: build
+        run: |
+          ./gradlew build
+      - name: Upload artifacts
+        id: upload-artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          paths: |
+            build/**
+            Dockerfile
+  docker-build:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Download artifacts
+        id: download-artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+      - name: Login to GitHub Container Registry
+        id: login-ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Harbor (${{ vars.HARBOR_REGISTRY }})
+        if: ${{ vars.HARBOR_REGISTRY != '' }}
+        id: login-harbor
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ vars.HARBOR_REGISTRY }}
+          username: ${{ vars.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+      - name: Install Cosign
+        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+        id: setup-cosign
+        uses: sigstore/cosign-installer@v3
+      - name: Set up docker buildx
+        id: setup-buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Set up docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+            ${{ vars.HARBOR_REGISTRY }}/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+      - name: Build and push
+        id: build-push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Sign image with a key
+        id: sign-image
+        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+        run: |
+          images=""
+          for tag in ${TAGS}; do
+            images+="${tag}@${DIGEST} "
+          done
+          cosign sign --yes --key ${} ${images}
+        env:
+          TAGS: ${{ steps.meta.outputs.tags }}
+          DIGEST: ${{ steps.build-push.outputs.digest }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}

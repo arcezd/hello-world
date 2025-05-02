@@ -1,0 +1,23 @@
+.small-image {
+    width: 200px;
+    height: auto;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.image-attribution {
+    font-size: 0.8rem;
+    bottom: 5px;
+    right: 10px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.text-start {
+    margin-left: 1.5rem; /* Adds space below the image */
+    text-align: left;
+}
