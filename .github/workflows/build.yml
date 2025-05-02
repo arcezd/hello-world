@@ -38,10 +38,12 @@ jobs:
       - name: Get app version
         id: version
         run: |
-          echo "app-version=$(./gradlew printVersion -q)" >> $GITHUB_OUTPUT
+          app-version=$(gradle printVersion -q)
+          echo "app-version=$app-version" >> $GITHUB_OUTPUT
           # check that version matches the tag
           if [[ "${{ github.event.inputs.dry-run }}" == 'true' ]]; then
             echo "This is a dry run, skipping version check"
+            echo "App version: ${{ steps.version.outputs.app-version }}"
             exit 0
           elif [[ "${GITHUB_REF}" != "refs/tags/v${{ steps.version.outputs.app-version }}" ]]; then
             echo "Version ${GITHUB_REF} does not match tag v${{ steps.version.outputs.app-version }}"
@@ -50,7 +52,7 @@ jobs:
       - name: Build
         id: build
         run: |
-          ./gradlew build
+          gradle build
       - name: Upload artifacts
         id: upload-artifacts
         uses: actions/upload-artifact@v4
