@@ -90,7 +90,7 @@ jobs:
           username: ${{ vars.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASSWORD }}
       - name: Install Cosign
-        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'true' }}
         id: setup-cosign
         uses: sigstore/cosign-installer@v3
       - name: Set up docker buildx
@@ -112,12 +112,12 @@ jobs:
           build-args: |
             PROJECT_VERSION=${{ needs.java-build.outputs.app-version }}
           context: .
-          push: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+          push: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'true' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Sign image with a key
         id: sign-image
-        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
+        if: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'true' }}
         run: |
           images=""
           for tag in ${TAGS}; do
