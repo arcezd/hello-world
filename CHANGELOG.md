@@ -1,3 +1,9 @@
+## v0.2.0 (2025-05-01)
+
+### Feat
+
+- **actuator**: add actuator to project
+
 ## v0.1.5 (2025-05-01)
 
 ### Fix
