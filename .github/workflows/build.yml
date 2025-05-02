@@ -104,7 +104,7 @@ jobs:
             ghcr.io/${{ github.repository }}
             ${{ vars.HARBOR_REGISTRY != '' && format('{0}/{1}', vars.HARBOR_REGISTRY, github.repository) || '' }}
           tags: |
-            type=semver,pattern={{version}}
+            type=semver,pattern=v{{version}}
       - name: Build and push
         id: build-push
         uses: docker/build-push-action@v6
