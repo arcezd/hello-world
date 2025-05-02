@@ -1,3 +1,10 @@
+## v0.1.2 (2025-05-01)
+
+### Fix
+
+- **CI**: version check for build
+- **CI**: image tag check
+
 ## v0.1.1 (2025-05-01)
 
 ### Fix
