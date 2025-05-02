@@ -20,8 +20,9 @@ VOLUME /tmp
 # copy the jar file into the container
 COPY ${JAR_DIR}/${PROJECT_NAME}-${PROJECT_VERSION}.jar app.jar
 
-# expose the port the app runs on
+# expose the port the app runs on and the actuator port
 EXPOSE 8080
+EXPOSE 8081
 
 # run the jar file
 ENTRYPOINT ["java", "-jar", "app.jar"]
