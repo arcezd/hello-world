@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "app-version=$(./gradlew printVersion -q)" >> $GITHUB_OUTPUT
           # check that version matches the tag
-          if [[ "${{ github.event.inputs.dry-run }}" == 'false' ]]; then
+          if [[ "${{ github.event.inputs.dry-run }}" == 'true' ]]; then
             echo "This is a dry run, skipping version check"
             exit 0
           elif [[ "${GITHUB_REF}" != "refs/tags/v${{ steps.version.outputs.app-version }}" ]]; then
