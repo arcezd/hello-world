@@ -17,7 +17,7 @@ jobs:
   java-build:
     name: Build java project
     runs-on: ubuntu-latest
-    output:
+    outputs:
       java-version: ${{ steps.setup-java.outputs.java-version }}
       app-version: ${{ steps.version.outputs.app-version }}
     steps:
