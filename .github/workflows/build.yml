@@ -62,6 +62,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+    needs: java-build
     steps:
       - name: Download artifacts
         id: download-artifacts
@@ -103,6 +104,8 @@ jobs:
         id: build-push
         uses: docker/build-push-action@v6
         with:
+          build-args: |
+            PROJECT_VERSION=${{ needs.java-build.outputs.app-version }}
           context: .
           push: ${{ github.event_name == 'push' || github.event.inputs.dry-run != 'false' }}
           tags: ${{ steps.meta.outputs.tags }}
