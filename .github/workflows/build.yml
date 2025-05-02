@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: ${steps.facts.outputs.java-version}
+          java-version: ${{ steps.facts.outputs.java-version }}
           cache: 'gradle'
       - name: Get app version
         id: version
